@@ -25,15 +25,16 @@ const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
 `;
 
-const Header = styled.header`
-  height: 10vh;
-  display: flex;
-  align-item: center;
-  justify-content: center;
-`;
-const Loader = styled.h1`
+const Loader = styled.span`
   text-align: center;
   display: block;
+`;
+
+const Header = styled.header`
+  height: 15vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Overview = styled.div`
@@ -43,11 +44,11 @@ const Overview = styled.div`
   padding: 10px 20px;
   border-radius: 10px;
 `;
-
 const OverviewItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 33%;
   span:first-child {
     font-size: 10px;
     font-weight: 400;
@@ -61,6 +62,10 @@ const Description = styled.p`
 
 const GoLink = styled.h1<{ isActive: boolean }>`
   color: ${(props) => (props.isActive ? props.theme.accentColor : "white")};
+`;
+
+const BackLink = styled.span`
+  color: ${(props) => props.theme.accentColor};
 `;
 
 interface Routestate {
@@ -165,6 +170,9 @@ function Coin() {
       </Helmet>
       <Header>
         <Title>
+          <BackLink>
+            <Link to="/">&larr;</Link>
+          </BackLink>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>

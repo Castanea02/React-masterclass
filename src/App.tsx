@@ -3,10 +3,16 @@ import { useState } from "react";
 import Router from "./Router";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { createGlobalStyle } from "styled-components";
+import { ThemeProvider } from "styled-components";
+import { darktheme, lighttheme } from "./Theme";
+import { createUnparsedSourceFile } from "typescript";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "./atoms";
 
 const Globalstyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
-font-family: 'Source Sans Pro', sans-serif;
+fimport { isDarkAtom } from './atoms';
+ont-family: 'Source Sans Pro', sans-serif;
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -71,10 +77,14 @@ a{
 `; //Global scope
 
 function App() {
+  const isDark = useRecoilValue(isDarkAtom);
   return (
     <>
-      <Globalstyle /> <Router />
-      <ReactQueryDevtools initialIsOpen={true} />
+      <ThemeProvider theme={isDark ? darktheme : lighttheme}>
+        <Globalstyle />
+        <Router />
+        <ReactQueryDevtools initialIsOpen={true} />
+      </ThemeProvider>
     </>
   );
 }

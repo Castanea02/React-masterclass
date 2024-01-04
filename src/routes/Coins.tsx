@@ -4,6 +4,9 @@ import { useQuery } from "react-query";
 import { useEffect, useState } from "react";
 import { fetchCoins } from "../api";
 import { Helmet } from "react-helmet";
+import { inflateRaw } from "zlib";
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -21,10 +24,11 @@ const Header = styled.header`
 const CoinsList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: white;
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.cardBgColor};
+  color: ${(props) => props.theme.textColor};
   margin-bottom: 15px;
   border-radius: 10px;
+  box-shadow: 2px 3px 3px 2px gray;
   a {
     display: flex;
     align-items: center;
@@ -65,6 +69,8 @@ const Img = styled.img`
 `;
 
 function Coins() {
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
   const location = useLocation();
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
 
@@ -86,6 +92,7 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>Coins</Title>
+        <button onClick={toggleDarkAtom}>Toggle Darkmode</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
