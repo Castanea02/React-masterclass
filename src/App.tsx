@@ -1,79 +1,82 @@
 import { createGlobalStyle } from "styled-components";
-import ToDoList from "./components/ToDoList";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "react-beautiful-dnd";
+import styled from "styled-components";
+import { toDoState } from "./atoms";
 
-const Globalstyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
-  fimport { isDarkAtom } from './atoms';
-  ont-family: 'Source Sans Pro', sans-serif;
-  html, body, div, span, applet, object, iframe,
-  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-  a, abbr, acronym, address, big, cite, code,
-  del, dfn, em, img, ins, kbd, q, s, samp,
-  small, strike, strong, sub, sup, tt, var,
-  b, u, i, center,
-  dl, dt, dd, menu, ol, ul, li,
-  fieldset, form, label, legend,
-  table, caption, tbody, tfoot, thead, tr, th, td,
-  article, aside, canvas, details, embed,
-  figure, figcaption, footer, header, hgroup,
-  main, menu, nav, output, ruby, section, summary,
-  time, mark, audio, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-  }
-  /* HTML5 display-role reset for older browsers */
-  article, aside, details, figcaption, figure,
-  footer, header, hgroup, main, menu, nav, section {
-    display: block;
-  }
-  /* HTML5 hidden-attribute fix for newer browsers */
-  *[hidden] {
-      display: none;
-  }
-  body {
-    line-height: 1;
-  }
-  menu, ol, ul {
-    list-style: none;
-  }
-  blockquote, q {
-    quotes: none;
-  }
-  blockquote:before, blockquote:after,
-  q:before, q:after {
-    content: '';
-    content: none;
-  }
-  table {
-    border-collapse: collapse;
-    border-spacing: 0;
-  }
-  body{
-    font-weight: 300;
-    font-family: 'Source Sans Pro', sans-serif;
-    background-color:${(props) => props.theme.bgColor};
-    color:${(props) => props.theme.textColor};
-    line-height: 1.2;
-  }
-  a{
-    text-decoration:none;
-    color:inherit;
-  }
-  *{
-    box-sizing:border-box;
-  }
-`; //Global scope
+const Wrapper = styled.div`
+  display: flex;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+`;
+
+const Boards = styled.div`
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+`;
+const Board = styled.div`
+  padding: 20px 10px;
+  padding-top: 30px;
+  border-radius: 5px;
+  min-height: 200px;
+  background-color: ${(props) => props.theme.boardColor};
+`;
+
+const Card = styled.div`
+  background-color: ${(props) => props.theme.cardColor};
+  border-radius: 50px;
+  padding: 5px 10px;
+  margin: 5px;
+`;
 
 function App() {
+  const [toDos, setToDos] = useRecoilState(toDoState);
+  const onDragEnd = ({ draggableId, destination, source }: DropResult) => {
+    if (!destination) return;
+    setToDos((oldToDos) => {
+      const copyToDos = [...oldToDos];
+      copyToDos.splice(source.index, 1);
+      copyToDos.splice(destination.index, 0, draggableId);
+      return copyToDos;
+    });
+  };
+
   return (
-    <>
-      <Globalstyle />
-      <ToDoList />
-    </>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Wrapper>
+        <Boards>
+          <Droppable droppableId="one">
+            {(provided) => (
+              <Board ref={provided.innerRef} {...provided.droppableProps}>
+                {toDos.map((toDo, index) => (
+                  <Draggable key={toDo} draggableId={toDo} index={index}>
+                    {(provided) => (
+                      <Card
+                        ref={provided.innerRef}
+                        {...provided.dragHandleProps}
+                        {...provided.draggableProps}>
+                        {toDo}
+                      </Card>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </Board>
+            )}
+          </Droppable>
+        </Boards>
+      </Wrapper>
+    </DragDropContext>
   );
 }
 
