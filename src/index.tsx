@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { RecoilRoot } from "recoil";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import App from "./App";
-import { darkTheme } from "./theme";
+import { darkTheme } from "./Theme";
 
 const Globalstyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
@@ -71,6 +71,7 @@ const Globalstyle = createGlobalStyle`
     box-sizing:border-box;
   }
 `; //Global scope
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
