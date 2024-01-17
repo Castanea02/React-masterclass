@@ -121,7 +121,6 @@ function Header() {
     } else {
       navAnimation.start("top");
     }
-    console.log(scrollY.get());
   });
 
   const toggleSearch = () => {
@@ -182,6 +181,7 @@ function Header() {
           </motion.svg>
           <Input
             animate={inputAnimation}
+            initial={{ scaleX: 0 }}
             transition={{ type: "linear" }}
             placeholder="Search for movie or tv show"></Input>
         </Search>
