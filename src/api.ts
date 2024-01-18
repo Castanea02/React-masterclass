@@ -1,5 +1,5 @@
-const API_KEY = process.env.APU_KEY;
-const BASE_PATH = process.env.BASE_PATH;
+const API_KEY = "25c0f4daf85f6427ad3cba23632e9271";
+const BASE_PATH = "https://api.themoviedb.org/3";
 
 interface IMovie {
   id: number;

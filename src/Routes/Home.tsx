@@ -8,6 +8,7 @@ import { useState } from "react";
 
 const Wrapper = styled.div`
   background: black;
+  padding-bottom: 200px;
 `;
 
 const Loader = styled.div`
@@ -59,6 +60,13 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-position: center center;
   height: 200px;
   font-size: 66px;
+  position: relative;
+  &:first-child {
+    transform-origin: center left;
+  }
+  &:last-child {
+    transform-origin: center right;
+  }
 `;
 
 const rowVariants = {
@@ -68,6 +76,36 @@ const rowVariants = {
 };
 
 const offset = 6;
+
+const boxVariants = {
+  normal: { scale: 1 },
+  hover: {
+    zIndex: 99,
+    scale: 1.2,
+    y: -50,
+    transition: { delay: 0.5, type: "tween", duration: 0.3 },
+  },
+};
+
+const infoVariants = {
+  hover: {
+    opacity: 1,
+  },
+  transition: { delay: 0.5, type: "tween", duration: 0.3 },
+};
+
+const Info = styled(motion.div)`
+  padding: 10px;
+  background-color: ${(props) => props.theme.black.lighter};
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  h4 {
+    text-align: center;
+    font-size: 18px;
+  }
+`;
 
 function Home() {
   {
@@ -128,9 +166,15 @@ function Home() {
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
                     <Box
+                      whileHover="hover"
+                      initial="normal"
+                      variants={boxVariants}
                       key={movie.id}
-                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
-                    />
+                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}>
+                      <Info variants={infoVariants}>
+                        <h4>{movie.title}</h4>
+                      </Info>
+                    </Box>
                   ))}
               </Row>
             </AnimatePresence>
