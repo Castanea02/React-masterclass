@@ -25,3 +25,9 @@ export function getMovies() {
     `${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=kr`
   ).then((response) => response.json());
 }
+
+export function getSearchMovie(keyword: string) {
+  return fetch(
+    `${BASE_PATH}/search/movie?api_key=${API_KEY}&language=en-US&query=${keyword}&page=1&include_adult=false`
+  ).then((response) => response.json());
+}
